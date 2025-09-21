@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorpresa para Belencita</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Fondo con corazones */
+        .hearts-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.7;
+            animation: float 6s infinite;
+            color: #ff4081;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            z-index: 1;
+        }
+        
+        h1 {
+            color: #fff;
+            text-shadow: 0 0 10px #ff9ecc, 0 0 20px #ff9ecc;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        
+        /* Estilos para el sobre cerrado - Versión mejorada */
+        .envelope-closed {
+            width: 300px;
+            height: 200px;
+            margin: 0 auto;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.5s;
+            perspective: 1000px;
+        }
+        
+        .envelope-closed:hover {
+            transform: scale(1.05);
+        }
+        
+        .envelope-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s ease-in-out;
+        }
+        
+        .envelope-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f5f5f5, #e6e6e6);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            z-index: 2;
+        }
+        
+        .envelope-flap {
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-bottom: 90px solid #e8d1d1;
+            position: absolute;
+            top: -90px;
+            left: 0;
+            z-index: 3;
+            border-radius: 12px 12px 0 0;
+            transition: transform 1.2s ease-in-out;
+            transform-origin: top;
+        }
+        
+        .envelope-front::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+            z-index: 1;
+        }
+        
+        .stamp {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff4081, #7c4dff);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            transform: rotate(15deg);
+            z-index: 4;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: 2px dashed white;
+        }
+        
+        .to-label {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            font-style: italic;
+            color: #6d6d6d;
+            font-size: 16px;
+            z-index: 3;
+            font-family: 'Dancing Script', cursive;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+        
+        .heart-shine {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            color: #ff4081;
+            opacity: 0.3;
+            animation: pulse 2s infinite;
+        }
+        
+        /* Estilos para el sobre abierto */
+        .envelope-open {
+            width: 90%;
+            max-width: 500px;
+            display: none;
+            margin: 20px auto;
+            position: relative;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            animation: cardAppear 1.5s ease-out;
+        }
+        
+        @keyframes cardAppear {
+            0% { 
+                opacity: 0; 
+                transform: translateY(50px) scale(0.8); 
+            }
+            50% {
+                transform: translateY(-10px) scale(1.02);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+        
+        .flower-image {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 1s, box-shadow 1s;
+        }
+        
+        .flower-image:hover {
+            transform: scale(1.03) rotate(1deg);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .message {
+            background: linear-gradient(135deg, #fff9c4, #ffecb3);
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 26px;
+            color: #5d4037;
+            text-align: center;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 15px;
+            animation: messageAppear 2s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff4081, #7c4dff, #ff4081);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        @keyframes messageAppear {
+            0% { opacity: 0; transform: scale(0.8) rotate(-2deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0); }
+        }
+        
+        .hearts {
+            position: absolute;
+            top: -25px;
+            right: 15px;
+            font-size: 36px;
+            color: #ff4081;
+            animation: pulse 1.5s infinite;
+            text-shadow: 0 0 10px rgba(255, 64, 129, 0.5);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Botón de cerrar */
+        .close-btn {
+            margin-top: 25px;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #ff4081, #7c4dff);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .close-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #ff4081, #9c27b0);
+        }
+        
+        .close-btn:active {
+            transform: translateY(1px);
+        }
+        
+        /* Instrucción para el usuario */
+        .instruction {
+            margin-top: 30px;
+            color: #ff9ecc;
+            font-size: 18px;
+            text-align: center;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            font-family: 'Dancing Script', cursive;
+        }
+        
+        /* Responsividad */
+        @media (max-width: 600px) {
+            .envelope-closed {
+                width: 250px;
+                height: 170px;
+            }
+            
+            .envelope-flap {
+                border-left: 125px solid transparent;
+                border-right: 125px solid transparent;
+                border-bottom: 80px solid #e8d1d1;
+                top: -80px;
+            }
+            
+            .stamp {
+                width: 50px;
+                height: 50px;
+                font-size: 12px;
+            }
+            
+            .message {
+                font-size: 22px;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .envelope-closed {
+                width: 220px;
+                height: 150px;
+            }
+            
+            .envelope-flap {
+                border-left: 110px solid transparent;
+                border-right: 110px solid transparent;
+                border-bottom: 70px solid #e8d1d1;
+                top: -70px;
+            }
+            
+            .stamp {
+                width: 45px;
+                height: 45px;
+                font-size: 11px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .message {
+                font-size: 20px;
+            }
+            
+            .instruction {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-background" id="heartsBackground"></div>
+    
+    <div class="container">
+        <h1></h1>
+        
+        <div class="envelope-closed" id="closedEnvelope" onclick="openEnvelope()">
+            <div class="envelope-wrapper">
+                <div class="envelope-front">
+                    <div class="envelope-flap" id="envelopeFlap"></div>
+                    <div class="stamp">muak🩷</div>
+                    <div class="to-label">Para: Belencita</div>
+                    <div class="heart-shine">❤️</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="envelope-open" id="openEnvelope">
+            <div class="hearts"></div>
+            <img src="https://previews.123rf.com/images/greenpicstudio/greenpicstudio1903/greenpicstudio190300746/124182040-festive-gift-bouquet-of-decorative-yellow-sunflowers-on-empty-background-cartoon-colorful-floral.jpg" alt="Ramo de girasoles" class="flower-image">
+            <div class="message">
+                Para Belencita linda ❤️<br>
+                <br>
+                .
+            </div>
+            <button class="close-btn" onclick="closeEnvelope()">Cerrar Sobre</button>
+        </div>
+        
+        <p class="instruction" id="instructionText">dalae con la manita :3✨</p>
+    </div>
+
+    <script>
+        // Crear corazones para el fondo
+        function createHearts() {
+            const heartsContainer = document.getElementById('heartsBackground');
+            const heartsCount = 60;
+            
+            for (let i = 0; i < heartsCount; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '🩷💕';
+                
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.animationDuration = `${Math.random() * 4 + 4}s`;
+                heart.style.animationDelay = `${Math.random() * 5}s`;
+                heart.style.fontSize = `${Math.random() * 20 + 15}px`;
+                
+                heartsContainer.appendChild(heart);
+            }
+        }
+        
+        // Abrir el sobre con animación lenta y elegante
+        function openEnvelope() {
+            const envelope = document.getElementById('closedEnvelope');
+            const flap = document.getElementById('envelopeFlap');
+            const openEnvelope = document.getElementById('openEnvelope');
+            const instruction = document.getElementById('instructionText');
+            
+            // Animación de apertura del flap
+            flap.style.transform = 'rotateX(180deg)';
+            flap.style.transition = 'transform 1.2s ease-in-out';
+            
+            // Esperar a que se complete la animación del flap
+            setTimeout(() => {
+                envelope.style.display = 'none';
+                openEnvelope.style.display = 'block';
+                instruction.textContent = '¡Te amo, Belencita! ❤️';
+                
+                // Añadir más corazones al abrir
+                for (let i = 0; i < 25; i++) {
+                    createFloatingHeart();
+                }
+                
+                // Efecto de confeti simple
+                for (let i = 0; i < 40; i++) {
+                    createConfetti();
+                }
+            }, 1200);
+        }
+        
+        // Cerrar el sobre
+        function closeEnvelope() {
+            const envelope = document.getElementById('closedEnvelope');
+            const flap = document.getElementById('envelopeFlap');
+            const openEnvelope = document.getElementById('openEnvelope');
+            const instruction = document.getElementById('instructionText');
+            
+            // Primero ocultar el sobre abierto
+            openEnvelope.style.display = 'none';
+            
+            // Restablecer la transformación del flap
+            flap.style.transform = 'rotateX(0deg)';
+            
+            // Mostrar el sobre cerrado
+            envelope.style.display = 'block';
+            
+            // Restaurar el texto de instrucción
+            instruction.textContent = 'dalae con la manita :3✨';
+        }
+        
+        // Crear corazones flotantes adicionales
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '🌷';
+            
+            heart.style.position = 'fixed';
+            heart.style.left = `${Math.random() * 100}%`;
+            heart.style.fontSize = `${Math.random() * 25 + 15}px`;
+            heart.style.zIndex = '9998';
+            heart.style.animationDuration = `${Math.random() * 3 + 5}s`;
+            
+            document.body.appendChild(heart);
+            
+            // Eliminar el corazón después de la animación
+            setTimeout(() => {
+                heart.remove();
+            }, 8000);
+        }
+        
+        // Crear efecto de confeti
+        function createConfetti() {
+            const colors = ['#ff9ecc', '#ff4081', '#ffeb3b', '#ff9800', '#4caf50', '#2196f3', '#9c27b0'];
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            confetti.style.width = '12px';
+            confetti.style.height = '12px';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.top = '-20px';
+            confetti.style.zIndex = '9999';
+            confetti.style.boxShadow = '0 0 5px rgba(0,0,0,0.3)';
+            document.body.appendChild(confetti);
+            
+            const animation = confetti.animate([
+                { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+            ], {
+                duration: Math.random() * 3000 + 2000,
+                easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+            });
+            
+            animation.onfinish = () => {
+                confetti.remove();
+            };
+        }
+        
+        // Inicializar corazones al cargar la página
+        window.onload = function() {
+            createHearts();
+            
+            // Precargar la imagen para una experiencia más fluida
+            const img = new Image();
+            img.src = "https://previews.123rf.com/images/greenpicstudio/greenpicstudio1903/greenpicstudio190300746/124182040-festive-gift-bouquet-of-decorative-yellow-sunflowers-on-empty-background-cartoon-colorful-floral.jpg";
+        };
+    </script>
+</body>
+</html>
