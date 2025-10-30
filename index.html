@@ -528,7 +528,54 @@
             const img = new Image();
             img.src = "https://previews.123rf.com/images/greenpicstudio/greenpicstudio1903/greenpicstudio190300746/124182040-festive-gift-bouquet-of-decorative-yellow-sunflowers-on-empty-background-cartoon-colorful-floral.jpg";
         };
+
+
+
+
+
+
+        // Sistema de notificaciones
+function mostrarAlerta(mensaje, tipo = 'info') {
+    const alerta = document.createElement('div');
+    alerta.className = `fixed top-4 right-4 p-3 lg:p-4 rounded-lg shadow-lg text-white font-semibold z-50 text-sm lg:text-base ${
+        tipo === 'error' ? 'bg-red-500' : 
+        tipo === 'success' ? 'bg-green-500' : 'bg-blue-500'
+    }`;
+    alerta.textContent = mensaje;
+    document.body.appendChild(alerta);
+    
+    setTimeout(() => {
+        alerta.remove();
+    }, 3000);
+}
+
+// Cálculo de tarifas fijas (sin horas extras)
+function calcularTarifa(tipoVehiculo) {
+    const tarifas = {
+        Carro: 4000,
+        Moto: 3000
+    };
+    
+    return tarifas[tipoVehiculo];
+}
+
+// Actualización de estadísticas
+function updateStats() {
+  countDentro.textContent = vehiculos.length;
+  countSalidos.textContent = meta.salidos;
+  totalGanancias.textContent = '$' + meta.ganancias.toLocaleString();
+  reportGanancias.textContent = '$' + meta.ganancias.toLocaleString();
+  reportEntradas.textContent = meta.entradasTotales;
+  reportSalidas.textContent = meta.salidos;
+
+  // occupancy percent
+  const totalSpaces = spaces.length || 0;
+  const occupied = spaces.filter(s => s.occupied).length;
+  const pct = totalSpaces === 0 ? 0 : Math.round((occupied / totalSpaces) * 100);
+  ocupacionPct.textContent = pct + '%';
+}
     </script>
 </body>
 
 </html>
+
